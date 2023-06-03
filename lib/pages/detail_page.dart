@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
+import '../database/database_helper.dart';
+import '../models/moviemodel.dart';
+
 class MovieDetailPage extends StatefulWidget {
   final String title;
 
@@ -36,23 +39,36 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     }
   }
 
+  Future<void> addToFavorites() async {
+    final title = movieDetails['Title'];
+    final year = movieDetails['Year'];
+    final movie = MovieModel(title: title, year: year);
+
+    final db = await DatabaseHelper.instance.database;
+    await db.insert(DatabaseHelper.tableName, movie.toMap());
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Added to Favorites')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Movie Details'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.favorite),
+            onPressed: addToFavorites,
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(
-              movieDetails['Poster'] ?? '',
-              height: MediaQuery.of(context).size.height / 2,
-              width: MediaQuery.of(context).size.width,
-              fit: BoxFit.fill,
-            ),
             Text(
               'Title: ${movieDetails['Title'] ?? 'Loading...'}',
               style: TextStyle(

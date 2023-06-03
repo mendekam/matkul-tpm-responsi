@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:responsi_tpm/models/moviemodel.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../database/database_helper.dart';
+
 class FavoritePage extends StatefulWidget {
+  static const routeName = '/favorite';
+  const FavoritePage({Key? key}) : super(key: key);
   @override
   _FavoritePageState createState() => _FavoritePageState();
 }
@@ -20,7 +24,7 @@ class _FavoritePageState extends State<FavoritePage> {
     final db = await DatabaseHelper.instance.database;
     final movies = await db.query(DatabaseHelper.tableName);
     setState(() {
-      favoriteMovies = movies.map((json) => Movie.fromJson(json)).toList();
+      favoriteMovies = movies.map((json) => MovieModel.fromJson(json)).toList();
     });
   }
 

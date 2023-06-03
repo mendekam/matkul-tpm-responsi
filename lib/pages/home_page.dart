@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'detail_page.dart';
+import 'favorite_page.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/home';
@@ -33,9 +34,17 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Search Film'),
-      ),
+      appBar: AppBar(title: Text('Search Film'), actions: <Widget>[
+        IconButton(
+          icon: Icon(
+            Icons.favorite,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pushNamed(context, FavoritePage.routeName);
+          },
+        )
+      ]),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -86,7 +95,8 @@ class _HomePageState extends State<HomePage> {
                       },
                       child: Card(
                         child: ListTile(
-                          leading: Image.network(movie['Poster'], fit: BoxFit.fill, width: 100.0, height: 100.0),
+                          leading: Image.network(movie['Poster'],
+                              fit: BoxFit.fill, width: 100.0, height: 100.0),
                           title: Text(movie['Title']),
                           subtitle: Text(movie['Year']),
                         ),
@@ -102,4 +112,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
